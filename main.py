@@ -80,8 +80,8 @@ class ContentFilterClient:
         self.openai_client = OpenAIClient(user_id)
         self.ds_client = ds.SocialMediaDataStore(user_id)
    
-    def filter_new_channels(self):  
-        return self.filter_items(
+    def filter_interesting_new_channels(self):  
+        return self.filter_interesting_items(
             "subreddits",
             list(map(
                     lambda sr: ContentFilterClient.truncate_media_channel(sr, self.openai_client.model, self.openai_client.max_tokens>>2), #reduce the token length for descritption
@@ -90,8 +90,8 @@ class ContentFilterClient:
             )
         )
     
-    def filter_new_posts(self):
-        return self.filter_items(
+    def filter_interesting_new_posts(self):
+        return self.filter_interesting_items(
             "posts",
             list(map(
                     lambda p: ContentFilterClient.truncate_media_post(p, self.openai_client.model, self.openai_client.max_tokens>>1), #reduce the token length for post_content
@@ -100,7 +100,7 @@ class ContentFilterClient:
             )
         )
         
-    def filter_items(self, item_type: str, items: list[str]):
+    def filter_interesting_items(self, item_type: str, items: list[str]):
         if len(items) == 0: #do nothing for empty list
             print("nothing new")
             return        
@@ -132,6 +132,14 @@ class ContentFilterClient:
         
         #reset context window regardless
         self.openai_client.reset_context_window()
+
+    def short_list_interesting_channels(self):
+        # TODO: temp code. for now just filter on subscriber
+        filter_func = lambda ch: ch['subscriber'] > 500
+        channels = list(filter(filter_func, self.ds_client.get_channels_to_short_list()))[0:10] # getting top 10 to review        
+        self.ds_client.save_status(list(map(lambda ch: ch["name"] ,channels)), ds.ItemStatus.SHORT_LISTED)
+        return channels
+
 
     # all text operation related functions to NOT cross the rate limit
     # these are general function that are NOT specific to a client instance
@@ -208,14 +216,16 @@ class ContentFilterClient:
 def main():
     filter_client = ContentFilterClient("soumitsr@gmail.com")
 
-    
-    for r in filter_client.filter_new_channels():
+    """
+    for r in filter_client.filter_interesting_new_channels():
         print(r)
     
-    for r in filter_client.filter_new_posts():
+    for r in filter_client.filter_interesting_new_posts():
        print(r)
-    
-    for r in filter_client.ds_client.get_channels_to_short_list():
+    """
+
+
+    for r in filter_client.short_list_interesting_channels():
         print(r["name"])
     
    

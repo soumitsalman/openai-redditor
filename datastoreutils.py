@@ -20,6 +20,7 @@ class ItemStatus(Enum):
     SHORT_LISTED = "short_listed"
     ACTION_SUGGESTED = "action_suggested"
     ACTION_TAKEN = "action_taken"
+    IGNORE = "ignore"
 
 class SocialMediaDataStore:
     user_id = "" #currently this is not being used
