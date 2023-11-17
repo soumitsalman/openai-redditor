@@ -5,7 +5,6 @@ import re
 import pandas as pd
 from enum import Enum
 
-LOCATION_DIR = "C:\\Users\\soumi\\go-stuff\\reddit_data_dump\\"
 JOINED_CHANNELS = "_joined_subreddits.json"
 NEW_CHANNELS = "_recommended_subreddits.json"
 NEW_POSTS = "_posts.json"
@@ -27,7 +26,7 @@ class SocialMediaDataStore:
     
     def __init__(self, user_id: str):
         self.user_id = user_id
-        store_prefix = LOCATION_DIR+user_id
+        store_prefix = os.getenv("DATASTORE_LOCATION")+user_id
         self.joined_channels = store_prefix+JOINED_CHANNELS
         self.new_channels = store_prefix + NEW_CHANNELS
         self.new_posts = store_prefix + NEW_POSTS

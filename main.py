@@ -7,6 +7,7 @@ import redditutils as reddit
 import datastoreutils as ds
 import json
 from openai.types.chat.completion_create_params import ResponseFormat
+import envassist
 
 POST_EDITOR_MODEL = "gpt-4-1106-preview"
 CONTENT_FILTER_MODEL = "gpt-3.5-turbo-1106"
@@ -72,7 +73,6 @@ class OpenAIClient:
             "content": what
         }
     
-
 class ContentFilterClient:
 
     def __init__(self, user_id: str):
@@ -209,11 +209,9 @@ class ContentFilterClient:
 
                 yield res
         yield combined_msg 
-    
-    
-   
 
 def main():
+    envassist.load_env()
     filter_client = ContentFilterClient("soumitsr@gmail.com")
 
     """

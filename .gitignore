@@ -12,3 +12,6 @@ __pycache__/redditutils.cpython-310.pyc
 content_filter_training_data
 __pycache__/redditutils.cpython-310.pyc
 __pycache__/retryutils.cpython-310.pyc
+.env
+__pycache__/envassist.cpython-310.pyc
+__pycache__/redditutils.cpython-310.pyc
