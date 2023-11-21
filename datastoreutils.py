@@ -84,7 +84,7 @@ class SocialMediaDataStore:
         user_name = self.get_user_details()["user_name"]   
         # TODO: filter out posts for which there is already a user response
         # posts that has some content, is not self authored and has not already been analyzed
-        post_filter = lambda p: p["post_content"] != "" and p["author"] != user_name and not self.exists_in_logs(p["name"], ItemStatus.ANALYZED)
+        post_filter = lambda p: p["selftext_html"] != "" and p["author"] != user_name and not self.exists_in_logs(p["name"], ItemStatus.ANALYZED)
 
         return list(filter(post_filter, rec_posts))
 

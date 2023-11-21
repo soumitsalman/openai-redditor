@@ -151,7 +151,7 @@ class ContentFilterClient:
         }
         initial_tcount = ContentFilterClient.count_tokens(json.dumps(blob), model)        
         blob["description"] = ContentFilterClient.truncate_string(
-            reddit.scrub_markdown(str(ch["public_description"])+ ": "+ str(ch["description"])), 
+            str(ch["public_description_html"])+ "\n"+ str(ch["description_html"]), 
             model, 
             max_tokens - initial_tcount) #100 is a safety margin
         res = json.dumps(blob)
@@ -159,8 +159,7 @@ class ContentFilterClient:
 
     # this is done to truncate message to fit within token size. usually the post_content is large
     def truncate_media_post(p :dict[str, any], model: str, max_tokens: int) -> str:
-        blob = {
-            "contained_url": p["contained_url"],
+        blob = {            
             "url": p["url"],
             "name": p["name"],            
             "subreddit": p["subreddit"],
@@ -169,7 +168,7 @@ class ContentFilterClient:
         }
         initial_tcount = ContentFilterClient.count_tokens(json.dumps(blob), model)
         blob["post_content"] = ContentFilterClient.truncate_string(
-            reddit.scrub_markdown(p["post_content"]), 
+            p["selftext_html"], 
             model, 
             max_tokens - initial_tcount) #100 is a safety margin
 
@@ -217,7 +216,7 @@ def main():
     """
     for r in filter_client.filter_interesting_new_channels():
         print(r)
-    
+    """
     for r in filter_client.filter_interesting_new_posts():
        print(r)
     """
@@ -225,7 +224,7 @@ def main():
 
     for r in filter_client.short_list_interesting_channels():
         print(r["name"])
-    
+    """
    
     
 
